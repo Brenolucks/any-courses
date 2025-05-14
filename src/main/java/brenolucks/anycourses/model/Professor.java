@@ -1,8 +1,6 @@
 package brenolucks.anycourses.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,10 +12,17 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "tb_professor")
-public class Professor extends User {
+@Entity
+@Table(name = "tb_professor")
+public class Professor {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @Column(name = "professor_description")
     private String professorDescription;
     @OneToMany(mappedBy = "professor")
     private List<Courses> courses;
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }

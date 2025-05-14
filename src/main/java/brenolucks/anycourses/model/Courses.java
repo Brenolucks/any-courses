@@ -29,6 +29,8 @@ public class Courses {
     @JoinColumn(name = "professor_id")
     private Professor professor;
     @ManyToMany
-    @JoinColumn(name = "videos_id")
+    @JoinTable(name = "tb_courses_videos",
+            joinColumns = {@JoinColumn(name = "courses_id")},
+            inverseJoinColumns = {@JoinColumn(name = "videos_id")})
     private List<Videos> videos;
 }
