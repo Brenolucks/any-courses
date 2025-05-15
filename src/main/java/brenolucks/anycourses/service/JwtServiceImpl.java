@@ -1,5 +1,6 @@
 package brenolucks.anycourses.service;
 
+import brenolucks.anycourses.model.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,9 +19,9 @@ public class JwtServiceImpl implements JwtService {
     private long expiration;
 
     @Override
-    public String generateToken(String username) {
+    public String generateToken(User user) {
         return Jwts.builder()
-                .subject(username)
+                .subject(user.getUsername())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSigningKey())

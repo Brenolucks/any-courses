@@ -1,6 +1,7 @@
 package brenolucks.anycourses.controller.UserController;
 
 import brenolucks.anycourses.model.UserRequestDTO;
+import brenolucks.anycourses.model.UserResponseDTO;
 import brenolucks.anycourses.service.UserService.UserServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +19,8 @@ public class UserController {
     }
 
     @PostMapping("/api/login")
-    public ResponseEntity<String> userLogin(@RequestBody UserRequestDTO userRequestDTO) {
-        return ResponseEntity.status(HttpStatus.OK).body("User logged with success!");
+    public ResponseEntity<UserResponseDTO> userLogin(@RequestBody UserRequestDTO userRequestDTO) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.loginUser(userRequestDTO));
     }
 
     @GetMapping("/api/test")

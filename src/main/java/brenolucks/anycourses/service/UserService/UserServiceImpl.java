@@ -1,24 +1,49 @@
 package brenolucks.anycourses.service.UserService;
 
+import brenolucks.anycourses.config.SecurityConfig;
 import brenolucks.anycourses.model.User;
 import brenolucks.anycourses.model.UserRequestDTO;
+import brenolucks.anycourses.model.UserResponseDTO;
 import brenolucks.anycourses.repository.UserRepository;
+import brenolucks.anycourses.service.JwtServiceImpl;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtServiceImpl jwtService;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository,
+                           PasswordEncoder passwordEncoder,
+                           AuthenticationManager authenticationManager,
+                           JwtServiceImpl jwtService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
     }
 
     @Override
-    public String loginUser(UserRequestDTO userRequestDTO) {
-        return "USER 123";
+    public UserResponseDTO loginUser(UserRequestDTO userRequestDTO) {
+        //check in DB
+        var existUser = userRepository.findByUsername(userRequestDTO.username());
+
+        if(existUser.isEmpty()) throw new RuntimeException("User not exist");
+
+        var user = new UsernamePasswordAuthenticationToken(userRequestDTO.username(), userRequestDTO.password());
+
+        var userAuthenticated = authenticationManager.authenticate(user);
+        var token = jwtService.generateToken((User) userAuthenticated.getPrincipal());
+
+        return new UserResponseDTO(user.getName(), userRequestDTO.email(), userRequestDTO.role(), token);
     }
 
     @Override
