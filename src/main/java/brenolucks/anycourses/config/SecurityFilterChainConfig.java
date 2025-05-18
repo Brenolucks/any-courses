@@ -1,14 +1,9 @@
 package brenolucks.anycourses.config;
 
 import brenolucks.anycourses.jwt.JwtAuthenticationFilter;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpRequest;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -16,9 +11,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.filter.OncePerRequestFilter;
-
-import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
@@ -39,13 +31,12 @@ public class SecurityFilterChainConfig {
                 .authorizeHttpRequests(
                         authorizationManagerRequestMatcherRegistry ->
                                 authorizationManagerRequestMatcherRegistry
-                                        .requestMatchers(HttpMethod.POST, "/api/register")
-                                        .permitAll()
-                                        .requestMatchers(HttpMethod.POST, "/api/login")
-                                        .permitAll()
-                                        .requestMatchers(HttpMethod.GET, "/api/test").hasRole("PROFESSOR")
-                                        .anyRequest()
-                                        .authenticated()
+                                        .requestMatchers(HttpMethod.POST, "/api/register").permitAll()
+                                        .requestMatchers(HttpMethod.POST, "/api/login").permitAll()
+                                        .requestMatchers(HttpMethod.POST, "/api/register/course").hasRole("PROFESSOR")
+                                        .anyRequest().authenticated()
+                                        .requestMatchers(HttpMethod.POST, "/api/register/video").hasRole("PROFESSOR")
+                                        .anyRequest().authenticated()
                 )
                 .sessionManagement(httpSecuritySessionManagementConfigurer ->
                         httpSecuritySessionManagementConfigurer

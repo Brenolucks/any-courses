@@ -1,8 +1,12 @@
 package brenolucks.anycourses.controller.UserController;
 
-import brenolucks.anycourses.model.UserRequestDTO;
-import brenolucks.anycourses.model.UserResponseDTO;
+import brenolucks.anycourses.dto.CourseRequestDTO;
+import brenolucks.anycourses.dto.UserRequestDTO;
+import brenolucks.anycourses.dto.UserResponseDTO;
+import brenolucks.anycourses.dto.VideoRequestDTO;
+import brenolucks.anycourses.exception.UserExistException;
 import brenolucks.anycourses.service.UserService.UserServiceImpl;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,14 +27,11 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(userService.loginUser(userRequestDTO));
     }
 
-    @GetMapping("/api/test")
-    public ResponseEntity<String> getNothing() {
-        return ResponseEntity.status(HttpStatus.OK).body("Get nothing!");
-    }
-
     @PostMapping("/api/register")
     public ResponseEntity<String> userRegister(@RequestBody UserRequestDTO userRequestDTO) {
         userService.registerUser(userRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body("User registered with success!");
     }
+
+
 }
